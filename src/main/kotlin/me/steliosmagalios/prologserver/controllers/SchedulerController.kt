@@ -10,17 +10,10 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class SchedulerController(val prologService: PrologService) {
-    @PostMapping("/", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping("/", MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     fun schedule(@RequestBody body: ScheduleRequest): ScheduleResponse {
-        // Convert String ids to numeric ids
-
-        // Call prolog
-
-        // For the Task objects, convert the numeric ids back to Strings
-
-        // Send the response
-        return ScheduleResponse(ArrayList())
+        return ScheduleResponse(prologService.schedule(body.lectures, body.groups, body.rooms, body.professors))
     }
 
     data class ScheduleRequest(val lectures: List<Lecture>, val groups: List<Group>, val professors: List<Professor>, val rooms: List<Room>)

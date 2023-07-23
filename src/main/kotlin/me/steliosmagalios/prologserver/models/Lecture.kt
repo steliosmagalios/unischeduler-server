@@ -1,6 +1,18 @@
 package me.steliosmagalios.prologserver.models
 
-import me.steliosmagalios.prologserver.utils.RoomType
+import com.parctechnologies.eclipse.AbstractCompoundTerm
+import com.parctechnologies.eclipse.EclipseException
 
-class Lecture(val id: Int, val duration: Int, val type: RoomType, val groups: List<Int>, val professors: List<Int>)
+class Lecture(private val id: Int, private val duration: Int, private val type: String, private val groups: List<Int>, private val professors: List<Int>) : AbstractCompoundTerm("lecture", 5) {
+    override fun arg(index: Int): Any {
+        return when (index) {
+            1 -> id
+            2 -> duration
+            3 -> type
+            4 -> groups
+            5 -> professors
+            else -> throw EclipseException()
+        }
+    }
+}
 
