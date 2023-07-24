@@ -1,9 +1,7 @@
 package me.steliosmagalios.prologserver.services
 
-import com.parctechnologies.eclipse.CompoundTerm
-import com.parctechnologies.eclipse.EclipseEngine
-import com.parctechnologies.eclipse.EclipseEngineOptions
-import com.parctechnologies.eclipse.OutOfProcessEclipse
+import com.parctechnologies.eclipse.*
+import jakarta.annotation.PreDestroy
 import me.steliosmagalios.prologserver.models.*
 import org.springframework.stereotype.Service
 import java.io.File
@@ -24,9 +22,19 @@ class PrologService() {
     }
 
     fun schedule(lectures: List<Lecture>, groups: List<Group>, rooms: List<Room>, professors: List<Professor>): List<Task> {
-        // FIXME: Handle Fail throwing
-        // schedule(+Lectures, +Professors, +Groups, +Rooms, -Tasks)
-        val result = engine.rpc("schedule", lectures, professors, groups, rooms, null)
+        val result: CompoundTerm?
+
+        try {
+            // FIXME: Handle Fail throwing
+            // schedule(+Lectures, +Professors, +Groups, +Rooms, -Tasks)
+            result = engine.rpc("schedule", lectures, professors, groups, rooms, null)
+        }
+        catch (fail: Fail) {
+            throw Exception("Program failed to find solution")
+        }
+        catch (e: EclipseException) {
+            throw Exception("An error occurred")
+        }
 
         // we have to parse the tasks like that
         val taskList = ArrayList<Task>()
@@ -39,5 +47,10 @@ class PrologService() {
 
     private fun convertTermToTask(term: CompoundTerm): Task {
         return Task(term.arg(1)as Int, term.arg(2)as Int, term.arg(3) as Int)
+    }
+
+    @PreDestroy
+    fun onDestroy() {
+        (engine as EmbeddedEclipse).destroy()
     }
 }
