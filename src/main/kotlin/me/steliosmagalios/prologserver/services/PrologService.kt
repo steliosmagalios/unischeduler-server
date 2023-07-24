@@ -25,6 +25,7 @@ class PrologService() {
 
     fun schedule(lectures: List<Lecture>, groups: List<Group>, rooms: List<Room>, professors: List<Professor>): List<Task> {
         // FIXME: Handle Fail throwing
+        // schedule(+Lectures, +Professors, +Groups, +Rooms, -Tasks)
         val result = engine.rpc("schedule", lectures, professors, groups, rooms, null)
 
         // we have to parse the tasks like that

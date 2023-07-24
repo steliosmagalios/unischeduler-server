@@ -1,8 +1,8 @@
 FROM stmagalios/tomcat_eclipseclp
 
 # rename with your .war file name
-COPY "./build/libs/PrologServer-0.0.1-SNAPSHOT.war" "/usr/local/tomcat/webapps/app.war"
-COPY "./program.ecl" "/usr/local/tomcat/program.ecl"
+COPY "build/libs/UnischedulerServer-1.0.0.war" "/usr/local/tomcat/webapps/app.war"
+ADD "prolog" "/usr/local/tomcat/prolog"
 
 EXPOSE 8080/tcp
 

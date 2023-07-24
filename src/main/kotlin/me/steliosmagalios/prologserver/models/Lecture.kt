@@ -9,8 +9,8 @@ class Lecture(private val id: Int, private val duration: Int, private val type: 
             1 -> id
             2 -> duration
             3 -> type
-            4 -> groups
-            5 -> professors
+            4 -> professors
+            5 -> groups
             else -> throw EclipseException()
         }
     }
