@@ -25,8 +25,6 @@ class PrologService() {
         val result: CompoundTerm?
 
         try {
-            // FIXME: Handle Fail throwing
-            // schedule(+Lectures, +Professors, +Groups, +Rooms, -Tasks)
             result = engine.rpc("schedule", lectures, professors, groups, rooms, null)
         }
         catch (fail: Fail) {
