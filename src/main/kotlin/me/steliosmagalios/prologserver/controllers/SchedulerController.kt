@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class SchedulerController(val prologService: PrologService) {
     @PostMapping("/", MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
     fun schedule(@RequestBody body: ScheduleRequest): ScheduleResponse {
         val tasks: List<Task>
 
