@@ -6,16 +6,13 @@
 :- lib(ic_global).
 :- lib(branch_and_bound).
 
-% dummy data used for testing
-% :- compile("../utils/data/data.ecl").
-
 
 
 
 
 %%% test predicate used for testing the program %%%
 test_schedule(Tasks) :-
-  findall(lecture(Id, Duration, Type, Profs, Groups), lecture(Id, Duration, Type, Profs, Groups), Lectures),
+  findall(lecture(Id, Duration, Profs, Groups, Type), lecture(Id, Duration, Profs, Groups, Type), Lectures),
   findall(group(Id, Count, Overlapping), group(Id, Count, Overlapping), Groups),
   findall(room(Id, Type, Capacity, Times), room(Id, Type, Capacity, Times), Rooms),
   findall(professor(Id, Times), professor(Id, Times), Professors),
@@ -56,8 +53,23 @@ schedule(Lectures, Professors, Groups, Rooms, Tasks) :-
 calculate_optimization_value(Tasks, Goal) :-
   % FIXME: Makespan here is for placeholder purposes.
   map(Tasks, get_when, [], Whens),
-  ic_global:maxlist(Whens, Goal).
+  transform_whens(Whens, Values),
+  ic_global:maxlist(Values, Goal).
 
+
+
+%%% transform_whens/2
+%%% transform_whens(+Whens, -Transformed).
+%%% This predicate applies the following arithmetic extression to every When variable to bound them in the space [1..14]
+%%% The expression is ((X div 14) + X) mod 15, where X is a When variable. This assignment is necessary to calculate the correct optimization value.
+
+transform_whens([], []) :- !.
+
+transform_whens([When | Whens], [Value | Transformed]) :-
+  custom_div(When, 14, DayIndex),
+  NewHour #= DayIndex + When,
+  custom_mod(NewHour, 15, Value),
+  transform_whens(Whens, Transformed).
 
 
 

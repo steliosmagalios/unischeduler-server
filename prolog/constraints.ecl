@@ -51,30 +51,38 @@ lecture_constraints(
   % Create the When variable and apply time constraints
   [When] #:: WhenDomain,
   EndTime #= When + Duration,
-  ensure(When, WhenDomain, Duration),
 
   % Lecture must start and end in the same day
   custom_mod(When, 14, StartMod),
   custom_mod(EndTime, 14, EndMod),
   StartMod #< EndMod,
 
+
+
   % Apply alternative constraint for all eligible rooms
   alternative(When, Duration, Where, EligibleRooms, CurrAtList),
 
+  % ensure all times are available
+  DurationToTest is Duration - 1,
+  ensure(When, DurationToTest),
 
   % Add the current AtList to the final AtList
   append(RestAtList, CurrAtList, AtList).
 
+ensure(Var, Duration) :-
+  ic:get_domain_as_list(Var, Domain),
+  ensure_aux(Var, Domain, Duration).
 
+%%% ensure(+Var, +Domain, +Duration).
+%%% This predicate ensures that the next Duration items are part of Domain.
+ensure_aux(_, _, 0) :- !.
 
-ensure(_, _, 0) :- !.
-
-ensure(Var, Domain, Duration) :-
-  [Y] #:: Domain,
-  Y #= Var + Duration - 1,
-  NewD is Duration - 1,
-  ensure(Var, Domain, NewD).
-
+ensure_aux(Var, Domain, Duration) :-
+  NewVar #:: Domain,
+  NewVar #= Var + Duration,
+  %is_in_domain(NewVar, Var),
+  NewDuration is Duration - 1,
+  ensure_aux(Var, Domain, NewDuration).
 
 
 

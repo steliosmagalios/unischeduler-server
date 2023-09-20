@@ -10,6 +10,7 @@
 :- export apply_disjunctive/2.
 :- export remove_duplicates/2.
 :- export custom_mod/3.
+:- export custom_div/3.
 :- export alternative/5. 
 
 
@@ -95,18 +96,19 @@ remove_duplicates([_Id | RestList], RestUnique) :-
 
 
 
-%%% custom_mod/3
-%%% custom_mod(X,Y,Mod)
-%%% Mod = X mod Y
-custom_mod(X, Y, Mod) :-
+custom_division(X, Y, Div, Mod) :-
   % Checks for sanity
   sanity_check(X),
   sanity_check(Y),
-  integers([N]),
+  integers([Div]),
 
   Mod #< abs(Y),
-  Mod #= X - N * Y,
+  Mod #= X - Div * Y,
   Mod #>= 0.
+
+custom_mod(X, Y, Mod) :- custom_division(X, Y, _, Mod).
+
+custom_div(X, Y, Div) :- custom_division(X, Y, Div, _).
 
 sanity_check(X):-
   integer(X), !.
