@@ -6,6 +6,9 @@
 :- lib(ic_global).
 :- lib(branch_and_bound).
 
+% dummy data used for testing
+:- compile("../utils/data/data.ecl").
+
 
 
 
