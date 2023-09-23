@@ -6,11 +6,6 @@
 :- lib(ic_global).
 :- lib(branch_and_bound).
 
-% dummy data used for testing
-:- compile("../utils/data/data.ecl").
-
-
-
 
 
 %%% test predicate used for testing the program %%%
@@ -44,7 +39,7 @@ schedule(Lectures, Professors, Groups, Rooms, Tasks) :-
   % Run branch and bound
   calculate_optimization_value(Tasks, Goal),
   get_vars_from_tasks(Tasks, Vars),
-  bb_min(labeling(Vars), Goal, bb_options{ strategy: dichotomic, timeout: 10 }).
+  bb_min(labeling(Vars), Goal, bb_options{ strategy: dichotomic, timeout: 60 }).
 
 
 
